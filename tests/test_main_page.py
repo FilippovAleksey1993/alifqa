@@ -150,10 +150,13 @@ def test_popular_offers():
     print("Headers:", dict(resp.request.headers))
     print("Body:", resp.request.body)
 
-    print("=== RESPONSE ===")
-    print("Status Code:", resp.status_code)
-    print("Response Headers:", dict(resp.headers))
-    print("Response Body:", resp.text)
+
+
+
+    # print("=== RESPONSE ===")
+    # print("Status Code:", resp.status_code)
+    # print("Response Headers:", dict(resp.headers))
+    # print("Response Body:", resp.text)
 
     attach_reqres(resp)
     assert resp.status_code == 200, f"Expected 200, got {resp.status_code}. Response: {resp.text}"
