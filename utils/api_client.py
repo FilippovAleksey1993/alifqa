@@ -4,10 +4,10 @@ import os
 
 load_dotenv('E:/Alifqapy/tests/.env')
 
-base_url = os.getenv('base_url')
-username = 998903574573
-password = os.getenv('password')
-security_key = os.getenv('security_key')
+base_url = "https://gshop.ox-sys.com"
+username = "998903574573"
+password = "340340"
+security_key = "DnBwY_n3lOSvQKpKQFhSYWFtToVEE4bEjB7yYJz2Q5U="
 
 auth_token = None
 cookie = security_key
