@@ -1,1 +1,1 @@
-base_url = "https://gw.alifshop.uz"
+base_url = "https://gshop.ox-sys.com"
