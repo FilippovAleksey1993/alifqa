@@ -92,3 +92,23 @@ jobs:
         name: allure-report
         path: allure-report
         retention-days: 30
+
+
+    - name: Create simple HTML report
+      if: always()
+      run: |
+        echo "=== Creating simple report ==="
+        echo "<html><body><h1>Test Results</h1><ul>" > report.html
+        find allure-results -name "*.json" | while read file; do
+          name=$(grep -o '"name": "[^"]*' "$file" | head -1 | cut -d'"' -f4)
+          status=$(grep -o '"status": "[^"]*' "$file" | head -1 | cut -d'"' -f4)
+          echo "<li>$name - $status</li>" >> report.html
+        done
+        echo "</ul></body></html>" >> report.html
+        echo "Total tests: $(find allure-results -name "*.json" | wc -l)" >> report.html
+    
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v4
+      with:
+        name: simple-report
+        path: report.html
