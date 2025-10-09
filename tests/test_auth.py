@@ -13,7 +13,7 @@ def test_get_profile_unauthorized():
 @allure.story("Успешный вход в систему")
 def test_login_success():
     username = 998903574573
-    password = os.getenv('password')
+    password = 340340
     response = login(username, password)
 
     assert response.status_code == 200
@@ -24,7 +24,7 @@ def test_login_success():
 @allure.story("Доступ к профилю после авторизации")
 def test_get_profile_authorized():
     username = 998903574573
-    password = os.getenv('password')
+    password = 340340
     login_response = login(username, password)
     assert login_response.status_code == 200
 
