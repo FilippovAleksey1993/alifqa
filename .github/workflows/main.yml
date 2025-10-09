@@ -19,6 +19,13 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
+
+    - name: Set up Java (для Allure)
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+
         
     - name: Install dependencies
       run: |
@@ -73,6 +80,15 @@ jobs:
       if: always()
       run: |
         allure generate allure-results -o allure-report --clean
+
+    - name: Upload allure-results (raw)
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-results
+        path: allure-results
+        retention-days: 7
+
     
     - name: Debug - Check Allure results content
       if: always()
