@@ -73,6 +73,17 @@ jobs:
       if: always()
       run: |
         allure generate allure-results -o allure-report --clean
+    
+    - name: Debug - Check Allure results content
+      if: always()
+      run: |
+        echo "=== Checking Allure results ==="
+        find allure-results -name "*.json" | head -2 | while read file; do
+          echo "File: $file"
+          echo "Content:"
+          cat "$file"
+          echo "---"
+        done
         
     - name: Upload Allure report
       uses: actions/upload-artifact@v4
