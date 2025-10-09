@@ -20,10 +20,13 @@ jobs:
       with:
         python-version: '3.11'
         
+    - name: List files (debug)
+      run: ls -la  # ← ДЛЯ ОТЛАДКИ - посмотрим что в корне
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements.txt  # ← Должен быть в корне
         
     - name: Create .env file
       run: |
