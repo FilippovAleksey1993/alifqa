@@ -19,36 +19,11 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-
-    - name: Set up Java (для Allure)
-      uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: '17'
-
         
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirement.txt
-        pip install allure-pytest  # Добавьте эту строку!
-        
-    - name: Install Allure Commandline
-      run: |
-        sudo wget https://github.com/allure-framework/allure2/releases/download/2.24.1/allure-2.24.1.tgz
-        sudo tar -zxvf allure-2.24.1.tgz -C /opt/
-        sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
-        allure --version
-
-    - name: Create .env file from secrets
-      run: |
-        cat > .env << EOF
-        BASE_URL=${{ secrets.BASE_URL }}
-        USERNAME=${{ secrets.USERNAME }}
-        PASSWORD=${{ secrets.PASSWORD }}
-        SECURITY_KEY=${{ secrets.SECURITY_KEY }}
-        EOF
-        echo "Created .env file"
         
     - name: Debug - Check if .env file exists
       run: |
@@ -71,35 +46,13 @@ jobs:
       run: |
         pytest tests/ -v --alluredir=allure-results -s
         
-    - name: List allure-results content
-      run: |
-        echo "Contents of allure-results:"
-        ls -la allure-results/ || echo "allure-results directory not found!"
-        
     - name: Generate Allure report
+      uses: simple-elf/allure-report-action@master
       if: always()
-      run: |
-        allure generate allure-results -o allure-report --clean
-
-    - name: Upload allure-results (raw)
-      if: always()
-      uses: actions/upload-artifact@v4
       with:
-        name: allure-results
-        path: allure-results
-        retention-days: 7
-
-    
-    - name: Debug - Check Allure results content
-      if: always()
-      run: |
-        echo "=== Checking Allure results ==="
-        find allure-results -name "*.json" | head -2 | while read file; do
-          echo "File: $file"
-          echo "Content:"
-          cat "$file"
-          echo "---"
-        done
+        allure_results: allure-results
+        allure_report: allure-report
+        keep_reports: 20
         
     - name: Upload Allure report
       uses: actions/upload-artifact@v4
@@ -108,23 +61,3 @@ jobs:
         name: allure-report
         path: allure-report
         retention-days: 30
-
-
-    - name: Create simple HTML report
-      if: always()
-      run: |
-        echo "=== Creating simple report ==="
-        echo "<html><body><h1>Test Results</h1><ul>" > report.html
-        find allure-results -name "*.json" | while read file; do
-          name=$(grep -o '"name": "[^"]*' "$file" | head -1 | cut -d'"' -f4)
-          status=$(grep -o '"status": "[^"]*' "$file" | head -1 | cut -d'"' -f4)
-          echo "<li>$name - $status</li>" >> report.html
-        done
-        echo "</ul></body></html>" >> report.html
-        echo "Total tests: $(find allure-results -name "*.json" | wc -l)" >> report.html
-    
-    - name: Upload HTML report
-      uses: actions/upload-artifact@v4
-      with:
-        name: simple-report
-        path: report.html
