@@ -32,6 +32,16 @@ jobs:
         sudo tar -zxvf allure-2.24.1.tgz -C /opt/
         sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
         allure --version
+
+    - name: Create .env file from secrets
+      run: |
+        cat > .env << EOF
+        BASE_URL=${{ secrets.BASE_URL }}
+        USERNAME=${{ secrets.USERNAME }}
+        PASSWORD=${{ secrets.PASSWORD }}
+        SECURITY_KEY=${{ secrets.SECURITY_KEY }}
+        EOF
+        echo "Created .env file"
         
     - name: Debug - Check if .env file exists
       run: |
