@@ -24,6 +24,14 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirement.txt
+        pip install allure-pytest  # Добавьте эту строку!
+        
+    - name: Install Allure Commandline
+      run: |
+        sudo wget https://github.com/allure-framework/allure2/releases/download/2.24.1/allure-2.24.1.tgz
+        sudo tar -zxvf allure-2.24.1.tgz -C /opt/
+        sudo ln -s /opt/allure-2.24.1/bin/allure /usr/bin/allure
+        allure --version
         
     - name: Debug - Check if .env file exists
       run: |
@@ -46,13 +54,15 @@ jobs:
       run: |
         pytest tests/ -v --alluredir=allure-results -s
         
+    - name: List allure-results content
+      run: |
+        echo "Contents of allure-results:"
+        ls -la allure-results/ || echo "allure-results directory not found!"
+        
     - name: Generate Allure report
-      uses: simple-elf/allure-report-action@master
       if: always()
-      with:
-        allure_results: allure-results
-        allure_report: allure-report
-        keep_reports: 20
+      run: |
+        allure generate allure-results -o allure-report --clean
         
     - name: Upload Allure report
       uses: actions/upload-artifact@v4
