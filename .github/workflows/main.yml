@@ -20,16 +20,14 @@ jobs:
       with:
         python-version: '3.11'
         
-    - name: List files (debug)
-      run: ls -la  # ← ДЛЯ ОТЛАДКИ - посмотрим что в корне
-        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirement.txt  # ← Должен быть в корне
+        pip install -r requirement.txt
         
     - name: Create .env file
       run: |
+        echo "Creating .env file with secrets..."
         cat > tests/.env << EOF
         base_url=${{ secrets.BASE_URL }}
         username=${{ secrets.USERNAME }}
@@ -37,9 +35,29 @@ jobs:
         security_key=${{ secrets.SECURITY_KEY }}
         EOF
         
+        echo "Checking created .env file:"
+        cat tests/.env
+        
+    - name: Debug - Check if .env file exists
+      run: |
+        echo "Checking if .env file exists in tests/:"
+        ls -la tests/.env || echo ".env file not found!"
+        
+    - name: Debug - Check secrets are set
+      run: |
+        echo "BASE_URL length: ${#BASE_URL}"
+        echo "USERNAME length: ${#USERNAME}"
+        echo "PASSWORD length: ${#PASSWORD}"
+        echo "SECURITY_KEY length: ${#SECURITY_KEY}"
+      env:
+        BASE_URL: ${{ secrets.BASE_URL }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PASSWORD: ${{ secrets.PASSWORD }}
+        SECURITY_KEY: ${{ secrets.SECURITY_KEY }}
+        
     - name: Run tests with pytest
       run: |
-        pytest tests/ -v --alluredir=allure-results
+        pytest tests/ -v --alluredir=allure-results -s
         
     - name: Generate Allure report
       uses: simple-elf/allure-report-action@master
