@@ -2,15 +2,15 @@ from utils.api_client import login, get_profile, get_profile_unauthorized
 import os
 import allure
 
-@allure.feature("Авторизация")
-@allure.story("Проверка доступа без авторизации")
+@allure.parent_suite('Авторизация')
+@allure.suite('Проверка доступа без авторизации')
 def test_get_profile_unauthorized():
     response = get_profile_unauthorized()
     with allure.step("401"):
         assert response.status_code == 401
 
-@allure.feature("Авторизация")
-@allure.story("Успешный вход в систему")
+@allure.parent_suite('Авторизация')
+@allure.suite('Успешный вход в систему')
 def test_login_success():
     username = 998903574573
     password = 340340
@@ -20,8 +20,8 @@ def test_login_success():
     with allure.step("Авторизовано и получен токен"):
         assert 'token' in response.json()
 
-@allure.feature("Авторизация")
-@allure.story("Доступ к профилю после авторизации")
+@allure.parent_suite('Авторизация')
+@allure.suite('Доступ к профилю после авторизации')
 def test_get_profile_authorized():
     username = 998903574573
     password = 340340
