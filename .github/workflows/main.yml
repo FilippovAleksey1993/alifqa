@@ -61,3 +61,9 @@ jobs:
         name: allure-report
         path: allure-report
         retention-days: 30
+    - name: Send report to Telegram
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        python telegram_reporter.py
