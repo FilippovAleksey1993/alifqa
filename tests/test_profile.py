@@ -1,6 +1,7 @@
 from utils.api_client import login, get_profile
 from utils.helpers import validate_phone_number
 import os
+import allure
 
 @allure.parent_suite('Проверки профиля')
 @allure.suite('Проверка наличия ключевых полей')
