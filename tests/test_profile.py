@@ -2,7 +2,8 @@ from utils.api_client import login, get_profile
 from utils.helpers import validate_phone_number
 import os
 
-
+@allure.parent_suite('Проверки профиля')
+@allure.suite('Проверка наличия ключевых полей')
 def test_profile_structure():
     username = 998903574573
     password = os.getenv('password')
@@ -19,7 +20,8 @@ def test_profile_structure():
         assert 'code' in data
         assert 'message' in data
 
-
+@allure.parent_suite('Проверки профиля')
+@allure.suite('Проверка номера телефона')
 def test_phone_number_format():
     username = 998903574573
     password = os.getenv('password')
